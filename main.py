@@ -5,7 +5,6 @@ import requests
 from dotenv import load_dotenv
 
 load_dotenv()
-SLACK_HOST = os.getenv("SLACK_HOST", "hackclub.slack.com")
 USER_TOKEN = os.getenv("USER_TOKEN")
 IMAGES_PATH = os.getenv("IMAGES_PATH", "images")
 INTERVAL = int(os.getenv("INTERVAL", 30 * 60))
@@ -13,11 +12,13 @@ INTERVAL = int(os.getenv("INTERVAL", 30 * 60))
 current_image = ""
 
 def set_pfp(image_path):
-    url = f"https://{SLACK_HOST}/api/users.setPhoto"
+    url = "https://slack.com/api/users.setPhoto"
+    headers = {
+        "Authorization": f"Bearer {USER_TOKEN}"
+    }
     with open(image_path, "rb") as image_file:
         files = {"image": image_file}
-        data = {"token": USER_TOKEN}
-        response = requests.post(url, files=files, data=data)
+        response = requests.post(url, headers=headers, files=files)
     
     return response
 
@@ -28,7 +29,7 @@ def randomize_pfp():
         current_image = random.choice(os.listdir(IMAGES_PATH))
 
     res = set_pfp(os.path.join(IMAGES_PATH, current_image))
-    if res.status_code == 200:
+    if res.status_code == 200 and res.json().get("ok"):
         print(f"Profile picture updated to {current_image}")
     else:
         print(f"Failed to update profile picture: {res.text}")
