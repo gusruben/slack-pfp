@@ -2,11 +2,13 @@ import os
 import random
 import time
 import requests
+from dotenv import load_dotenv
 
-SLACK_HOST = "hackclub.slack.com"
-USER_TOKEN = ""
-IMAGES_PATH = "images"
-INTERVAL = 30 * 60
+load_dotenv()
+SLACK_HOST = os.getenv("SLACK_HOST", "hackclub.slack.com")
+USER_TOKEN = os.getenv("USER_TOKEN")
+IMAGES_PATH = os.getenv("IMAGES_PATH", "images")
+INTERVAL = int(os.getenv("INTERVAL", 30 * 60))
 
 current_image = ""
 
@@ -20,6 +22,7 @@ def set_pfp(image_path):
     return response
 
 def randomize_pfp():
+    global current_image
     last_image = current_image
     while current_image == last_image:
         current_image = random.choice(os.listdir(IMAGES_PATH))
