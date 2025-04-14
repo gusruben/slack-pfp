@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 USER_TOKEN = os.getenv("USER_TOKEN")
 IMAGES_PATH = os.getenv("IMAGES_PATH", "images")
-CROPPED_IMAGES_PATH = os.getenv("CROPPED_IMAGES_PATH", "images/cropped")
+CROPPED_IMAGES_PATH = os.getenv("CROPPED_IMAGES_PATH", os.path.join(IMAGES_PATH, "cropped"))
 INTERVAL = int(os.getenv("INTERVAL", 30 * 60))
 
 current_image = ""
